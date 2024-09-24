@@ -1,4 +1,4 @@
-package org.example.trends_backend.UserService;
+package org.example.trends_backend.UserService.Controller;
 
 import org.example.trends_backend.UserService.DTO.LoginDTO;
 import org.example.trends_backend.UserService.DTO.UserSignupDTO;
@@ -7,8 +7,6 @@ import org.example.trends_backend.UserService.Exception.SmallPasswordException;
 import org.example.trends_backend.UserService.Exception.UserNotFoundException;
 import org.example.trends_backend.UserService.Model.User;
 import org.example.trends_backend.UserService.Service.UserService;
-import org.example.trends_backend.UserService.Service.*;
-import org.example.trends_backend.UserService.Model.*;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

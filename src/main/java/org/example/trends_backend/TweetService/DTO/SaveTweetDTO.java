@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TweetDTO {
+public class SaveTweetDTO {
    private String text;
    private String author;
+   private String token;
 }

@@ -1,5 +1,6 @@
 package org.example.trends_backend.UserService.Service;
 
+import org.example.trends_backend.UserService.DTO.TokenResponse;
 import org.example.trends_backend.UserService.Exception.SmallPasswordException;
 import org.example.trends_backend.UserService.Exception.UserNotFoundException;
 import org.example.trends_backend.UserService.Model.Roles;
@@ -99,11 +100,22 @@ public class UserService {
 
     }
 
+    public static Claims decodeToken(String token, String key) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
         // this should return Name and roles from payload
-        public static Claims verifyToken(String token, String key) {
-            return Jwts.parser()
-                    .setSigningKey(key)
-                    .parseClaimsJws(token)
-                    .getBody();
+        public static TokenResponse verifyToken(String token, String key) {
+
+            Claims claims = decodeToken(token,key);
+            String name = claims.get("name", String.class);
+            String role = claims.get("role", String.class);
+            TokenResponse response = new TokenResponse();
+            response.setName(name);
+            response.setRole(role);
+            return response;
     }
 }

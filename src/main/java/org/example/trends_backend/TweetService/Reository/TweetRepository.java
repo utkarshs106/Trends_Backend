@@ -13,4 +13,5 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     Tweet findById(int tweetId);
     List<Tweet> findByAuthor(String authorName);
     void deleteById(int tweetId);
+    void deleteAll();
 }

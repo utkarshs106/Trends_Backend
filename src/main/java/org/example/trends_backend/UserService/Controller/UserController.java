@@ -1,6 +1,7 @@
 package org.example.trends_backend.UserService.Controller;
 
 import org.example.trends_backend.UserService.DTO.LoginDTO;
+import org.example.trends_backend.UserService.DTO.TokenResponse;
 import org.example.trends_backend.UserService.DTO.UserSignupDTO;
 import org.example.trends_backend.UserService.DTO.VerifyTokenDTO;
 import org.example.trends_backend.UserService.Exception.SmallPasswordException;
@@ -22,6 +23,9 @@ public class UserController {
     @PostMapping("/signup")
     @ExceptionHandler(SmallPasswordException.class)
     public User signup(@RequestBody UserSignupDTO userSignupDTO) {
+        System.out.println(userSignupDTO.getUsername());
+        System.out.println(userSignupDTO.getPassword());
+        System.out.println(userSignupDTO.getRole());
        return userService.signup(userSignupDTO.getUsername(),userSignupDTO.getPassword(),userSignupDTO.getRole());
     }
 
@@ -38,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/verifyToken")
-    public Claims verifyToken(@RequestBody VerifyTokenDTO verifyTokenDTO) {
+    public TokenResponse verifyToken(@RequestBody VerifyTokenDTO verifyTokenDTO) {
         return userService.verifyToken(verifyTokenDTO.getToken(),key);
     }
 }

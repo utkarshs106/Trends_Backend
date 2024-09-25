@@ -1,12 +1,12 @@
 package org.example.trends_backend.TweetService.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -16,12 +16,19 @@ import java.util.UUID;
 public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
-    String text;
-    String author;
-    String createdAt;
-    int retweetCount;
-    int likes;
-    int dislikes;
+    private int id;
+    private String text;
+    private String author;
+    private String createdAt;
+    private int retweetCount;
+    private int likes;
+    private int dislikes;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "Tweet_Tags", // Junction table name
+            joinColumns = @JoinColumn(name = "id"), // Foreign key in the junction table to this entity
+            inverseJoinColumns = @JoinColumn(name = "Tagid") // Foreign key to the other entity
+    )
+    private Set<Tags> tags = new HashSet<>();
 
 }

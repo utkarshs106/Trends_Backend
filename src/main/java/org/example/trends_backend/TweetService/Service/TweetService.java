@@ -2,13 +2,16 @@ package org.example.trends_backend.TweetService.Service;
 
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
-import org.example.trends_backend.TweetService.Model.Tweet;
+import org.example.trends_backend.TweetService.Model.*;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TweetService {
@@ -24,6 +27,9 @@ public class TweetService {
         t1.setText(tweet.getText());
         t1.setRetweetCount(0);
         t1.setCreatedAt(currentDate.toString());
+        t1.setTags(tweet.getTags());
+
+
        Tweet response =  tweetRepository.save(t1);
        return response.getId();
     }

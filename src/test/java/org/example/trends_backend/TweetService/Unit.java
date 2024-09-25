@@ -4,6 +4,7 @@ import org.example.trends_backend.TweetService.Controller.TweetController;
 import org.example.trends_backend.TweetService.DTO.FetchTweetDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
+import org.example.trends_backend.TweetService.Model.Tags;
 import org.example.trends_backend.TweetService.Model.Tweet;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.example.trends_backend.TweetService.Service.TweetService;
@@ -19,7 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,12 +65,19 @@ public class Unit {
         LoginDTO loginDTO = new LoginDTO();
         loginDTO.setUsername("Utkarsh");
         loginDTO.setPassword("123456789");
+
         String token = userController.Login(loginDTO);
         SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
-
         saveTweetDTO.setAuthor("Utkarsh");
         saveTweetDTO.setToken(token);
         saveTweetDTO.setText("Hello World");
+
+        Set<Tags> mySet = new HashSet<>();
+        Tags tags = new Tags();
+        tags.setName("Profile");
+        mySet.add(tags);
+
+        saveTweetDTO.setTags(mySet);
 
        int id =  tweetController.makeTweet(saveTweetDTO);
         FetchTweetDTO fetchTweetDTO = new FetchTweetDTO();
@@ -152,7 +162,7 @@ public class Unit {
         int id =  tweetController.makeTweet(saveTweetDTO);
         UpdateTweetDTO updateTweetDTO = new UpdateTweetDTO();
 
-        updateTweetDTO.setTweetText("Welcome");
+        updateTweetDTO.setTweetText("Welcome to Trends");
         updateTweetDTO.setAuthorName("Utkarsh");
         updateTweetDTO.setToken(token);
         updateTweetDTO.setTweetId(id);
@@ -162,8 +172,8 @@ public class Unit {
         FetchTweetDTO fetchTweetDTO = new FetchTweetDTO();
         fetchTweetDTO.setId(id);
         fetchTweetDTO.setToken(token);
-
-        assertEquals("Welcome", tweetController.getTweetById(fetchTweetDTO).getText());
+        System.out.println(tweetController.getTweetById(fetchTweetDTO).getText());
+        assertEquals("Welcome to Trends", tweetController.getTweetById(fetchTweetDTO).getText());
     }
 
 }

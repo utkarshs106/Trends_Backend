@@ -1,6 +1,7 @@
 package org.example.trends_backend.TweetService.Service;
 
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
+import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.Tweet;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,9 @@ public class TweetService {
     }
     public void deleteTweet(int id){
         tweetRepository.deleteById(id);
+    }
+    public void updateTweet(UpdateTweetDTO tweetDTO){
+        System.out.println(tweetDTO.getTweetText());
+       tweetRepository.updateTweet(tweetDTO.getTweetId(),tweetDTO.getTweetText(),tweetDTO.getAuthorName());;
     }
 }

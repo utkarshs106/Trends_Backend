@@ -3,6 +3,7 @@ package org.example.trends_backend.TweetService;
 import org.example.trends_backend.TweetService.Controller.TweetController;
 import org.example.trends_backend.TweetService.DTO.FetchTweetDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
+import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.Tweet;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.example.trends_backend.TweetService.Service.TweetService;
@@ -124,6 +125,45 @@ public class Unit {
        assertEquals("I am doing great", list.get(1).getText());
 
     }
+    @Test
+    public void updateTweet(){
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+        tweetRepository.deleteAll();
 
+        UserSignupDTO userSignupDTO = new UserSignupDTO();
+        userSignupDTO.setUsername("Utkarsh");
+        userSignupDTO.setPassword("123456789");
+        userSignupDTO.setRole("Master");
+        userController.signup(userSignupDTO);
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setUsername("Utkarsh");
+        loginDTO.setPassword("123456789");
+        String token = userController.Login(loginDTO);
+        SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
+
+        String tweetText = "Hello World";
+        saveTweetDTO.setAuthor("Utkarsh");
+        saveTweetDTO.setToken(token);
+        saveTweetDTO.setText(tweetText);
+
+        int id =  tweetController.makeTweet(saveTweetDTO);
+        UpdateTweetDTO updateTweetDTO = new UpdateTweetDTO();
+
+        updateTweetDTO.setTweetText("Welcome");
+        updateTweetDTO.setAuthorName("Utkarsh");
+        updateTweetDTO.setToken(token);
+        updateTweetDTO.setTweetId(id);
+
+        tweetController.updateTweet(updateTweetDTO);
+
+        FetchTweetDTO fetchTweetDTO = new FetchTweetDTO();
+        fetchTweetDTO.setId(id);
+        fetchTweetDTO.setToken(token);
+
+        assertEquals("Welcome", tweetController.getTweetById(fetchTweetDTO).getText());
+    }
 
 }

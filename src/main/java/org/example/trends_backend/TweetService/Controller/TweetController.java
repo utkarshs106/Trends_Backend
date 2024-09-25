@@ -2,7 +2,9 @@ package org.example.trends_backend.TweetService.Controller;
 
 import org.example.trends_backend.TweetService.DTO.FetchTweetDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
+import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.Tweet;
+import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.example.trends_backend.TweetService.Service.TweetService;
 import org.example.trends_backend.UserService.Controller.UserController;
 import org.example.trends_backend.UserService.DTO.TokenResponse;
@@ -19,6 +21,8 @@ public class TweetController {
     TweetService tweetService;
     @Autowired
     UserController userController;
+    @Autowired
+    private TweetRepository tweetRepository;
 
     @PostMapping("/makeTweet")
     public int makeTweet(@RequestParam SaveTweetDTO tweet){
@@ -32,6 +36,16 @@ public class TweetController {
           System.out.println("token unverified");
       }
         return 0;
+    }
+
+    @PatchMapping("/update")
+    public void updateTweet(@RequestParam UpdateTweetDTO tweet){
+        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
+        verifyTokenDTO.setToken(tweet.getToken());
+        TokenResponse response = userController.verifyToken(verifyTokenDTO);
+        if(response.getName() != null){
+            tweetService.updateTweet(tweet);
+        }
     }
 
     @GetMapping("/get")

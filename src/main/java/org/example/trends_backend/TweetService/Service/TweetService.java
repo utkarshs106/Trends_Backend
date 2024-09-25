@@ -43,7 +43,9 @@ public class TweetService {
         tweetRepository.deleteById(id);
     }
     public void updateTweet(UpdateTweetDTO tweetDTO){
-        System.out.println(tweetDTO.getTweetText());
        tweetRepository.updateTweet(tweetDTO.getTweetId(),tweetDTO.getTweetText(),tweetDTO.getAuthorName());;
+    }
+    public List<Tweet> getAllTweetsByTagName(String Tagname){
+       return tweetRepository.findAllByTagName(Tagname);
     }
 }

@@ -71,4 +71,8 @@ public class TweetController {
         tweetService.deleteTweet(id);
     }
 
+    @GetMapping("/allTweetByTag{tag}")
+    public List<Tweet> getAllTweetsByTag(@PathVariable String tag){
+        return tweetService.getAllTweetsByTagName(tag);
+    }
 }

@@ -1,11 +1,13 @@
 package org.example.trends_backend.TweetService;
 
+import ch.qos.logback.core.subst.Token;
 import org.example.trends_backend.TweetService.Controller.TweetController;
 import org.example.trends_backend.TweetService.DTO.FetchTweetDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.Tags;
 import org.example.trends_backend.TweetService.Model.Tweet;
+import org.example.trends_backend.TweetService.Reository.TagsRepository;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.example.trends_backend.TweetService.Service.TweetService;
 import org.example.trends_backend.UserService.Controller.UserController;
@@ -16,6 +18,7 @@ import org.example.trends_backend.UserService.Repository.TokenRepository;
 import org.example.trends_backend.UserService.Repository.UserRepository;
 import org.example.trends_backend.UserService.Service.UserService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,23 +34,33 @@ public class Unit {
     @Autowired
     UserController userController;
     @Autowired
-    UserService userService;
+     UserService userService;
     @Autowired
-    UserRepository userRepository;
+     UserRepository userRepository;
     @Autowired
-    TweetService tweetService;
+     TweetService tweetService;
     @Autowired
-    TweetController tweetController;
+     TweetController tweetController;
     @Autowired
-    TokenRepository tokenRepository;
+     TokenRepository tokenRepository;
     @Autowired
-    RoleRepository roleRepository;
+     RoleRepository roleRepository;
     @Autowired
-    TweetRepository TweetRepository;
+     TweetRepository TweetRepository;
     @Autowired
-    private TweetRepository tweetRepository;
+    TweetRepository tweetRepository;
+    @Autowired
+    TagsRepository tagsRepository;
 
 
+    @Test
+    public void setup() {
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+        tweetRepository.deleteAll();
+        tagsRepository.deleteAll();
+    }
     @Test
     public void makeTweet(){
 
@@ -174,6 +187,46 @@ public class Unit {
         fetchTweetDTO.setToken(token);
         System.out.println(tweetController.getTweetById(fetchTweetDTO).getText());
         assertEquals("Welcome to Trends", tweetController.getTweetById(fetchTweetDTO).getText());
+    }
+
+    @Test
+    public void findListOfTweetwithTag(){
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+        tweetRepository.deleteAll();
+        tagsRepository.deleteAll();
+
+        UserSignupDTO userSignupDTO = new UserSignupDTO();
+        userSignupDTO.setUsername("Utkarsh");
+        userSignupDTO.setPassword("123456789");
+        userSignupDTO.setRole("Master");
+        userController.signup(userSignupDTO);
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setUsername("Utkarsh");
+        loginDTO.setPassword("123456789");
+
+        String token = userController.Login(loginDTO);
+
+        String Tag = "Profile";
+
+        SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
+        saveTweetDTO.setAuthor("Utkarsh");
+        saveTweetDTO.setToken(token);
+        saveTweetDTO.setText("Tagging testcase");
+
+        Set<Tags> mySet = new HashSet<>();
+        Tags tags = new Tags();
+        tags.setName("Profile");
+        mySet.add(tags);
+
+        saveTweetDTO.setTags(mySet);
+
+        tweetController.makeTweet(saveTweetDTO);
+
+        List<Tweet> tweetList = tweetController.getAllTweetsByTag("Profile");
+
     }
 
 }

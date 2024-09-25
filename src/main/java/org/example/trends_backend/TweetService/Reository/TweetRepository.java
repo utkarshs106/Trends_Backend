@@ -19,6 +19,22 @@ public interface TweetRepository extends JpaRepository<Tweet, Integer> {
     void deleteById(int tweetId);
     void deleteAll();
 
+    @Query(value = """
+            SELECT 
+                t1.id,
+                t1.author,
+                t1.created_at,
+                t1.dislikes,
+                t1.likes,
+                t1.retweet_count,
+                t1.text
+            FROM Tweet t1
+            JOIN tweet_tags twta ON t1.id = twta.id
+            JOIN Tags ta ON twta.tagid = ta.Tagid
+            WHERE ta.name = :TagName
+            """, nativeQuery = true)
+    List<Tweet> findAllByTagName(@Param("TagName") String TagName);
+
     @Modifying
     @Transactional
     @Query("update Tweet t set t.text = :tweet , t.author = :author where t.id = :id")

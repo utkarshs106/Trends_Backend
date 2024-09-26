@@ -23,12 +23,11 @@ public class Tweet {
     private int retweetCount;
     private int likes;
     private int dislikes;
-    @ManyToMany(cascade = CascadeType.PERSIST , fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "Tweet_Tags", // Junction table name
             joinColumns = @JoinColumn(name = "id"), // Foreign key in the junction table to this entity
             inverseJoinColumns = @JoinColumn(name = "Tagid") // Foreign key to the other entity
     )
     private Set<Tags> tags = new HashSet<>();
-
 }

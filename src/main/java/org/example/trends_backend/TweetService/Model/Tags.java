@@ -6,15 +6,16 @@ import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 public class Tags {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int Tagid;
+    @Column(unique = true)
     private String name;
-    @ManyToMany(mappedBy = "tags") // Inverse side of the relationship
+    @ManyToMany(mappedBy = "tags",fetch = FetchType.EAGER)
     private Set<Tweet> tweet = new HashSet<>();
 }

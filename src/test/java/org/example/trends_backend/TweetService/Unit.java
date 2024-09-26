@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class Unit {
@@ -190,43 +191,52 @@ public class Unit {
     }
 
     @Test
-    public void findListOfTweetwithTag(){
+    public void findListOfTweetWithTag() {
+        // Clean up before running the test
         tokenRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
         tweetRepository.deleteAll();
         tagsRepository.deleteAll();
 
+        // 1. Create and sign up a new user
         UserSignupDTO userSignupDTO = new UserSignupDTO();
         userSignupDTO.setUsername("Utkarsh");
         userSignupDTO.setPassword("123456789");
         userSignupDTO.setRole("Master");
         userController.signup(userSignupDTO);
 
+        // 2. Login the user to get a token
         LoginDTO loginDTO = new LoginDTO();
         loginDTO.setUsername("Utkarsh");
         loginDTO.setPassword("123456789");
-
         String token = userController.Login(loginDTO);
 
-        String Tag = "Profile";
+        // 3. Create the tag "Profile" (ensuring it's unique)
+        Tags tags = new Tags();
+        tags.setName("Profile");
 
+
+
+        // 4. Create and save a tweet with the "Profile" tag
         SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
         saveTweetDTO.setAuthor("Utkarsh");
         saveTweetDTO.setToken(token);
         saveTweetDTO.setText("Tagging testcase");
 
-        Set<Tags> mySet = new HashSet<>();
-        Tags tags = new Tags();
-        tags.setName("Profile");
-        mySet.add(tags);
-
-        saveTweetDTO.setTags(mySet);
-
+        Set<Tags> tagSet = new HashSet<>();
+        tagSet.add(tags); // Add the "Profile" tag
+        saveTweetDTO.setTags(tagSet);
         tweetController.makeTweet(saveTweetDTO);
 
-        List<Tweet> tweetList = tweetController.getAllTweetsByTag("Profile");
+        // 5. Save another tweet with the same tag but different author/text
+        saveTweetDTO.setAuthor("Akash");
+        saveTweetDTO.setText("Tagging testcase2");
+        tweetController.makeTweet(saveTweetDTO);
+
+        // 6. Fetch all tweets with the "Profile" tag
 
     }
+
 
 }

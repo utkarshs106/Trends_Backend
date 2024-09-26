@@ -75,4 +75,5 @@ public class TweetController {
     public List<Tweet> getAllTweetsByTag(@PathVariable String tag){
         return tweetService.getAllTweetsByTagName(tag);
     }
+
 }

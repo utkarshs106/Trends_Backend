@@ -1,37 +1,54 @@
 package org.example.trends_backend.TweetService.Service;
 
+import jakarta.persistence.EntityManager;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.*;
+import org.example.trends_backend.TweetService.Reository.TagsRepository;
 import org.example.trends_backend.TweetService.Reository.TweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.SQLOutput;
+import java.util.*;
 
 @Service
 public class TweetService {
     @Autowired
     TweetRepository tweetRepository;
+    @Autowired
+    TagsRepository tagsRepository;
+
     Date currentDate = new Date();
 
-    public int makeTweet(SaveTweetDTO tweet){
-        Tweet t1 = new Tweet();
-        t1.setAuthor(tweet.getAuthor());
-        t1.setLikes(0);
-        t1.setDislikes(0);
-        t1.setText(tweet.getText());
-        t1.setRetweetCount(0);
-        t1.setCreatedAt(currentDate.toString());
-        t1.setTags(tweet.getTags());
 
+    public int makeTweet(SaveTweetDTO tweetDTO) {
+        Tweet tweet = new Tweet();
+        tweet.setAuthor(tweetDTO.getAuthor());
+        tweet.setText(tweetDTO.getText());
+        tweet.setCreatedAt(currentDate.toString());
+       tweet.setTags(tweetDTO.getTags());
 
-       Tweet response =  tweetRepository.save(t1);
-       return response.getId();
+        Set<Tags> uniqueTags = new HashSet<>();
+
+        for (Tags tag : tweetDTO.getTags()) {
+            // Check if the tag already exists in the database
+            Tags existingTag = tagsRepository.findByName(tag.getName());
+            if (existingTag!=null) {
+                uniqueTags.add(existingTag); // Use existing tag
+            } else {
+                uniqueTags.add(tag); // Add new tag if it doesn't exist
+            }
+        }
+        for(Tags tag : uniqueTags) {
+            System.out.println("Print" + tag.getName()+tag.getTagid() + tag.getTweet());
+        }
+        tweet.setTags(uniqueTags); // Associate tags with tweet
+
+        // Save the tweet, this will also save new tags if any
+        tweetRepository.save(tweet);
+        return tweet.getId(); // Return the ID of the saved tweet
     }
     public List<Tweet> getTweetsList(String author){
         return tweetRepository.findByAuthor(author);

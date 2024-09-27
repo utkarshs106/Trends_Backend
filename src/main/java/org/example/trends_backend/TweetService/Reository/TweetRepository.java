@@ -39,4 +39,6 @@ public interface TweetRepository extends JpaRepository<Tweet, Integer> {
     @Transactional
     @Query("update Tweet t set t.text = :tweet , t.author = :author where t.id = :id")
     void updateTweet(@Param("id") int id, @Param("tweet") String tweet,@Param("author") String author);
+
+
 }

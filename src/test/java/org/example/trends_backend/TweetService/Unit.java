@@ -191,7 +191,7 @@ public class Unit {
     }
 
     @Test
-    public void findListOfTweetWithTag() {
+    public void getfeeds() {
         // Clean up before running the test
         tokenRepository.deleteAll();
         userRepository.deleteAll();
@@ -237,6 +237,5 @@ public class Unit {
         // 6. Fetch all tweets with the "Profile" tag
 
     }
-
 
 }

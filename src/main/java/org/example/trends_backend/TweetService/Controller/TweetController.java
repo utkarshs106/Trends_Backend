@@ -1,5 +1,6 @@
 package org.example.trends_backend.TweetService.Controller;
 
+import org.example.trends_backend.TweetService.DTO.FetchFeedDTO;
 import org.example.trends_backend.TweetService.DTO.FetchTweetDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
@@ -74,6 +75,16 @@ public class TweetController {
     @GetMapping("/allTweetByTag{tag}")
     public List<Tweet> getAllTweetsByTag(@PathVariable String tag){
         return tweetService.getAllTweetsByTagName(tag);
+    }
+    @PostMapping("/getFeed")
+    public List<Tweet> getTweetsByFeed(@RequestBody FetchFeedDTO fetchFeedDTO){
+        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
+        verifyTokenDTO.setToken(fetchFeedDTO.getToken());
+        TokenResponse response = userController.verifyToken(verifyTokenDTO);
+        if(response != null){
+            return tweetService.getfeed(fetchFeedDTO);
+        }
+        return null;
     }
 
 }

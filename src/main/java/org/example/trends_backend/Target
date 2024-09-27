@@ -1,2 +1,2 @@
-1. will keep tags unique
-2. will have a api call for feed with pagination
+ . feed with pagination sorted by timestamp
+ . will later implement kafka , redis full fledged

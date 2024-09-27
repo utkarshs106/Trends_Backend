@@ -1,6 +1,7 @@
 package org.example.trends_backend.TweetService.Service;
 
 import jakarta.persistence.EntityManager;
+import org.example.trends_backend.TweetService.DTO.FetchFeedDTO;
 import org.example.trends_backend.TweetService.DTO.SaveTweetDTO;
 import org.example.trends_backend.TweetService.DTO.UpdateTweetDTO;
 import org.example.trends_backend.TweetService.Model.*;
@@ -21,7 +22,6 @@ public class TweetService {
     TagsRepository tagsRepository;
 
     Date currentDate = new Date();
-
 
     public int makeTweet(SaveTweetDTO tweetDTO) {
         Tweet tweet = new Tweet();
@@ -65,4 +65,19 @@ public class TweetService {
     public List<Tweet> getAllTweetsByTagName(String Tagname){
        return tweetRepository.findAllByTagName(Tagname);
     }
+   public List<Tweet> getfeed(FetchFeedDTO fetchFeedDTO){
+        List<String> author = fetchFeedDTO.getAuthor();
+        List<Tags> tags = fetchFeedDTO.getTags();
+        List<Tweet> tweets = new ArrayList<>();
+        for(Tags tag : tags){
+           List<Tweet> tweetList =  tweetRepository.findAllByTagName(tag.getName());
+            tweets.addAll(tweetList);
+        }
+        for(String authorName : author){
+            List<Tweet> tweetList = tweetRepository.findByAuthor(authorName);
+            tweets.addAll(tweetList);
+        }
+       Collections.shuffle(tweets);
+        return tweets;
+   }
 }

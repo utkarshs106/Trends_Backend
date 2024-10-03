@@ -1,2 +1,4 @@
  . feed with pagination sorted by timestamp
  . will later implement kafka , redis full fledged
+ . Make user account more described . friendList, Intrest<Tags>
+.  will make a option so people can follow people and recieve their tweets

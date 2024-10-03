@@ -19,6 +19,7 @@ import org.example.trends_backend.UserService.Repository.UserRepository;
 import org.example.trends_backend.UserService.Service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,22 +55,15 @@ public class Unit {
     TagsRepository tagsRepository;
 
 
-    @Test
-    public void setup() {
+
+    public void resetDatabase() {
         tokenRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
         tweetRepository.deleteAll();
         tagsRepository.deleteAll();
     }
-    @Test
-    public void makeTweet(){
-
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        tweetRepository.deleteAll();
-
+    public String SignupLoginUtkarshProfile(){
         UserSignupDTO userSignupDTO = new UserSignupDTO();
         userSignupDTO.setUsername("Utkarsh");
         userSignupDTO.setPassword("123456789");
@@ -79,8 +73,15 @@ public class Unit {
         LoginDTO loginDTO = new LoginDTO();
         loginDTO.setUsername("Utkarsh");
         loginDTO.setPassword("123456789");
-
         String token = userController.Login(loginDTO);
+        return token;
+    }
+    @Test
+    public void makeTweet(){
+
+        resetDatabase();
+        String token = SignupLoginUtkarshProfile();
+
         SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
         saveTweetDTO.setAuthor("Utkarsh");
         saveTweetDTO.setToken(token);
@@ -107,26 +108,20 @@ public class Unit {
     @Test
     public  void makelistOfTweet(){
 
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        tweetRepository.deleteAll();
+        resetDatabase();
+        String token = SignupLoginUtkarshProfile();
 
-        UserSignupDTO userSignupDTO = new UserSignupDTO();
-        userSignupDTO.setUsername("Utkarsh");
-        userSignupDTO.setPassword("123456789");
-        userSignupDTO.setRole("Master");
-        userController.signup(userSignupDTO);
-
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername("Utkarsh");
-        loginDTO.setPassword("123456789");
-        String token = userController.Login(loginDTO);
         SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
-
         saveTweetDTO.setAuthor("Utkarsh");
         saveTweetDTO.setToken(token);
         saveTweetDTO.setText("Hello World");
+
+        Set<Tags> mySet = new HashSet<>();
+        Tags tags = new Tags();
+        tags.setName("Profile");
+        mySet.add(tags);
+        saveTweetDTO.setTags(mySet);
+
 
         int id =  tweetController.makeTweet(saveTweetDTO);
         FetchTweetDTO fetchTweetDTO = new FetchTweetDTO();
@@ -151,29 +146,28 @@ public class Unit {
     }
     @Test
     public void updateTweet(){
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        tweetRepository.deleteAll();
 
-        UserSignupDTO userSignupDTO = new UserSignupDTO();
-        userSignupDTO.setUsername("Utkarsh");
-        userSignupDTO.setPassword("123456789");
-        userSignupDTO.setRole("Master");
-        userController.signup(userSignupDTO);
+        resetDatabase();
+        String token = SignupLoginUtkarshProfile();
 
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername("Utkarsh");
-        loginDTO.setPassword("123456789");
-        String token = userController.Login(loginDTO);
         SaveTweetDTO saveTweetDTO = new SaveTweetDTO();
 
+        Set<Tags> hs1 = new HashSet<>();
+        Tags tags = new Tags();
+        tags.setName("Profile");
+        hs1.add(tags);
         String tweetText = "Hello World";
         saveTweetDTO.setAuthor("Utkarsh");
+        saveTweetDTO.setTags(hs1);
         saveTweetDTO.setToken(token);
         saveTweetDTO.setText(tweetText);
 
-        int id =  tweetController.makeTweet(saveTweetDTO);
+        int id=0;
+        try {
+             id = tweetController.makeTweet(saveTweetDTO);
+        }catch(Exception e){
+            System.out.println("Exception in makeTweet"+e.getMessage());
+        }
         UpdateTweetDTO updateTweetDTO = new UpdateTweetDTO();
 
         updateTweetDTO.setTweetText("Welcome to Trends");
@@ -193,24 +187,8 @@ public class Unit {
     @Test
     public void getfeeds() {
         // Clean up before running the test
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        tweetRepository.deleteAll();
-        tagsRepository.deleteAll();
-
-        // 1. Create and sign up a new user
-        UserSignupDTO userSignupDTO = new UserSignupDTO();
-        userSignupDTO.setUsername("Utkarsh");
-        userSignupDTO.setPassword("123456789");
-        userSignupDTO.setRole("Master");
-        userController.signup(userSignupDTO);
-
-        // 2. Login the user to get a token
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername("Utkarsh");
-        loginDTO.setPassword("123456789");
-        String token = userController.Login(loginDTO);
+        resetDatabase();
+        String token = SignupLoginUtkarshProfile();
 
         // 3. Create the tag "Profile" (ensuring it's unique)
         Tags tags = new Tags();

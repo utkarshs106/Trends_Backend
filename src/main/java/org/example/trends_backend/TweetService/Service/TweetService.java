@@ -28,8 +28,9 @@ public class TweetService {
         tweet.setAuthor(tweetDTO.getAuthor());
         tweet.setText(tweetDTO.getText());
         tweet.setCreatedAt(currentDate.toString());
-       tweet.setTags(tweetDTO.getTags());
-
+        tweet.setTags(tweetDTO.getTags());
+        System.out.println("tweetData"+tweet.getText());
+        System.out.println("tweetTag"+tweetDTO.getTags());
         Set<Tags> uniqueTags = new HashSet<>();
 
         for (Tags tag : tweetDTO.getTags()) {

@@ -25,12 +25,16 @@ public class TweetController {
     @Autowired
     private TweetRepository tweetRepository;
 
+    TokenResponse validaitingToken(String token) {
+        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
+        verifyTokenDTO.setToken(token);
+
+        return userController.verifyToken(verifyTokenDTO);
+    }
+
     @PostMapping("/makeTweet")
     public int makeTweet(@RequestParam SaveTweetDTO tweet){
-        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
-        verifyTokenDTO.setToken(tweet.getToken());
-
-      TokenResponse response = userController.verifyToken(verifyTokenDTO);
+      TokenResponse response = validaitingToken(tweet.getToken());
       if(response.getName() != null){
          return tweetService.makeTweet(tweet);
       }else{
@@ -41,9 +45,7 @@ public class TweetController {
 
     @PatchMapping("/update")
     public void updateTweet(@RequestParam UpdateTweetDTO tweet){
-        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
-        verifyTokenDTO.setToken(tweet.getToken());
-        TokenResponse response = userController.verifyToken(verifyTokenDTO);
+        TokenResponse response = validaitingToken(tweet.getToken());
         if(response.getName() != null){
             tweetService.updateTweet(tweet);
         }
@@ -51,11 +53,10 @@ public class TweetController {
 
     @GetMapping("/get")
     public Tweet getTweetById(@RequestParam FetchTweetDTO fetchTweetDTOn){
-        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
-        verifyTokenDTO.setToken(fetchTweetDTOn.getToken());
-
-        TokenResponse response = userController.verifyToken(verifyTokenDTO);
+        TokenResponse response = validaitingToken(fetchTweetDTOn.getToken());
         if(response != null){
+
+            System.out.println("Error Printed"+fetchTweetDTOn.getId());
             return  tweetService.getTweet(fetchTweetDTOn.getId());
         }else{
             System.out.println("token unverified");
@@ -77,10 +78,8 @@ public class TweetController {
         return tweetService.getAllTweetsByTagName(tag);
     }
     @PostMapping("/getFeed")
-    public List<Tweet> getTweetsByFeed(@RequestBody FetchFeedDTO fetchFeedDTO){
-        VerifyTokenDTO verifyTokenDTO = new VerifyTokenDTO();
-        verifyTokenDTO.setToken(fetchFeedDTO.getToken());
-        TokenResponse response = userController.verifyToken(verifyTokenDTO);
+    public List<Tweet> getTweetsForFeed(@RequestBody FetchFeedDTO fetchFeedDTO){
+        TokenResponse response = validaitingToken(fetchFeedDTO.getToken());
         if(response != null){
             return tweetService.getfeed(fetchFeedDTO);
         }

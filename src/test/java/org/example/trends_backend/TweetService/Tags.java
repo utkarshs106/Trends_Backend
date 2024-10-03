@@ -46,17 +46,14 @@ public class Tags {
     @Autowired
     TagsRepository tagsRepository;
 
-
-    @Test
-    public void getAllTweetsByTag(){
-
+    public void resetDatabase() {
         tokenRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
         tweetRepository.deleteAll();
         tagsRepository.deleteAll();
-
-        // 1. Create and sign up a new user
+    }
+    public void Signup(){
         UserSignupDTO userSignupDTO = new UserSignupDTO();
         userSignupDTO.setUsername("Utkarsh");
         userSignupDTO.setPassword("123456789");
@@ -68,15 +65,32 @@ public class Tags {
         userSignupDTO.setRole("GrandMaster");
         userController.signup(userSignupDTO);
 
-        // 2. Login the user to get a token
+    }
+
+    public String AkashToken(){
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setUsername("Akash");
+        loginDTO.setPassword("1234567890");
+        String token = userController.Login(loginDTO);
+        return token;
+    }
+    public String UtkarshToken(){
         LoginDTO loginDTO = new LoginDTO();
         loginDTO.setUsername("Utkarsh");
         loginDTO.setPassword("123456789");
         String token = userController.Login(loginDTO);
+        return token;
+    }
 
-        loginDTO.setUsername("Akash");
-        loginDTO.setPassword("1234567890");
-        String Akashtoken = userController.Login(loginDTO);
+
+    @Test
+    public void getAllTweetsByTag(){
+
+        resetDatabase();
+        Signup();
+
+        String token = UtkarshToken();
+        String Akashtoken = AkashToken();
 
         // 3. Create the tag "Profile" (ensuring it's unique)
         org.example.trends_backend.TweetService.Model.Tags tags = new org.example.trends_backend.TweetService.Model.Tags();
